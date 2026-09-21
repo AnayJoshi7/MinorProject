@@ -5,282 +5,329 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JARVIS</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-      @keyframes grid-flow {
-        0% {
+      /* Local Assets Fonts */
+      @font-face {
+        font-family: "AmericanCaptain";
+        src: url("../assets/AmericanCaptain-MdEY.otf") format("opentype");
+      }
+
+      @font-face {
+        font-family: "Avengero";
+        src: url("../assets/AvengeroRegular-zvgl.ttf") format("truetype");
+      }
+
+      @font-face {
+        font-family: "IronManOfWar2";
+        src: url("../assets/IronManOfWar2Ncv-E85l.ttf") format("truetype");
+      }
+
+      .font-jarvis-logo {
+        font-family: "Avengero", sans-serif;
+        letter-spacing: 0.05em;
+      }
+
+      .font-jarvis-ui {
+        font-family: "AmericanCaptain", sans-serif;
+        letter-spacing: 0.08em;
+      }
+
+      .font-avengero {
+        font-family: "Avengero", sans-serif;
+      }
+
+      /* Exact Background Gradient from design specs */
+      .bg-ironman-screen {
+        background: linear-gradient(
+          125deg,
+          #53141e 27%,
+          #ab0a0a 59%,
+          #801417 79%,
+          #d39819 90%,
+          #c0a345 100%
+        );
+      }
+
+      /* Exact Input Bar Gradient from design specs */
+      .bg-input-gradient {
+        background: linear-gradient(
+          to right,
+          #712828 0%,
+          #dfad30 19%,
+          #f4c632 100%
+        );
+      }
+
+      /* Arc Reactor Core Glow */
+      .arc-glow {
+        filter: drop-shadow(0 0 20px rgba(0, 180, 255, 0.45));
+        animation: arc-reactor-float 4s ease-in-out infinite,
+                   arc-reactor-glow 2.2s ease-in-out infinite;
+        will-change: transform, filter;
+      }
+
+      @keyframes arc-reactor-float {
+        0%, 100% {
           transform: translateY(0);
         }
-        100% {
-          transform: translateY(50px);
+        50% {
+          transform: translateY(-8px);
         }
       }
 
-      @keyframes fade-in {
+      @keyframes arc-reactor-glow {
+        0%, 100% {
+          filter: drop-shadow(0 0 16px rgba(0, 180, 255, 0.35));
+        }
+        50% {
+          filter: drop-shadow(0 0 29px rgba(0, 190, 255, 0.72));
+        }
+      }
+
+      /* Custom Chat Scrollbar */
+      #chat::-webkit-scrollbar {
+        width: 6px;
+      }
+      #chat::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      #chat::-webkit-scrollbar-thumb {
+        background: rgba(223, 173, 48, 0.4);
+        border-radius: 9999px;
+      }
+      #chat::-webkit-scrollbar-thumb:hover {
+        background: rgba(223, 173, 48, 0.7);
+      }
+
+      @keyframes message-pop {
         from {
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(12px) scale(0.98);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateY(0) scale(1);
         }
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
+      .animate-message {
+        animation: message-pop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      #messages {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-height: 100%;
+        justify-content: flex-end;
+      }
+
+      .message-row {
+        display: flex;
+        width: 100%;
+      }
+
+      .message-row.user {
+        justify-content: flex-end;
+      }
+
+      .message-row.jarvis {
+        justify-content: flex-start;
+      }
+
+      .chat-bubble {
+        border-radius: 16px;
+        box-shadow: 0 7px 14px rgba(31, 4, 7, 0.25);
+        font-family: "AmericanCaptain", sans-serif;
+        line-height: 1.05;
+      }
+
+      .user-bubble {
+        width: fit-content;
+        max-width: min(34vw, 390px);
+        padding: 14px 18px 11px;
+        background: #e7b530;
+        color: #351010;
+      }
+
+      .jarvis-bubble {
+        width: fit-content;
+        max-width: min(52vw, 610px);
+        padding: 15px 22px 12px;
+        background: rgba(39, 8, 13, 0.88);
+        border: 1px solid rgba(223, 173, 48, 0.52);
+        color: #fff8e1;
+      }
+
+      .chat-text {
+        margin: 0;
+        font-size: clamp(16px, 1.45vw, 23px);
+        letter-spacing: 0.055em;
+        text-transform: uppercase;
+      }
+
+      .chat-time {
+        display: block;
+        margin-top: 7px;
+        color: #6f4718;
+        font-family: "AmericanCaptain", sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+      }
+
+      .jarvis-bubble .chat-time {
+        color: #c18c27;
+      }
+
+      .arc-reactor-image {
+        transform: translateY(-18px);
+      }
+
+      .typing-bubble {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        min-height: 48px;
+      }
+
+      .typing-bubble span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #dfad30;
+        animation: typing 1s infinite ease-in-out;
+      }
+
+      .typing-bubble span:nth-child(2) { animation-delay: 0.15s; }
+      .typing-bubble span:nth-child(3) { animation-delay: 0.3s; }
+
+      @keyframes typing {
+        0%, 70%, 100% { transform: translateY(0); opacity: 0.45; }
+        35% { transform: translateY(-5px); opacity: 1; }
+      }
+
+      @media (max-width: 700px) {
+        .user-bubble,
+        .jarvis-bubble {
+          max-width: 82vw;
         }
-        50% {
-          opacity: 0.5;
+
+        .chat-text {
+          font-size: 16px;
         }
-      }
-
-      @keyframes bounce {
-        0%,
-        100% {
-          transform: translateY(0);
-        }
-        50% {
-          transform: translateY(-5px);
-        }
-      }
-
-      .animate-fade-in {
-        animation: fade-in 0.3s ease-out;
-      }
-
-      .animate-pulse {
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
-
-      .animate-bounce {
-        animation: bounce 1s infinite;
-      }
-
-      .grid-background {
-        background-image:
-          linear-gradient(
-            to right,
-            rgba(59, 130, 246, 0.1) 1px,
-            transparent 1px
-          ),
-          linear-gradient(
-            to bottom,
-            rgba(59, 130, 246, 0.1) 1px,
-            transparent 1px
-          );
-        background-size: 50px 50px;
-        animation: grid-flow 20s linear infinite;
-      }
-
-      /* Custom scrollbar */
-      #chat::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      #chat::-webkit-scrollbar-track {
-        background: rgba(15, 23, 42, 0.5);
-      }
-
-      #chat::-webkit-scrollbar-thumb {
-        background: rgba(59, 130, 246, 0.5);
-        border-radius: 4px;
-      }
-
-      #chat::-webkit-scrollbar-thumb:hover {
-        background: rgba(59, 130, 246, 0.7);
       }
     </style>
   </head>
-  <body class="m-0 overflow-hidden">
-    <!-- Main Container -->
-    <div
-      class="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 relative overflow-hidden"
-    >
-      <!-- Animated background grid -->
-      <div class="absolute inset-0 opacity-20">
-        <div class="absolute inset-0 grid-background"></div>
-      </div>
-
-      <!-- Glowing orbs -->
-      <div
-        class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
-      ></div>
-      <div
-        class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse"
-        style="animation-delay: 1s"
-      ></div>
-
-      <!-- Header -->
-      <header
-        class="relative z-10 backdrop-blur-md bg-black/30 border-b border-blue-500/30"
-      >
-        <div
-          class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between"
-        >
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <div
-                class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center animate-pulse"
-              >
-                <svg
-                  class="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  ></path>
-                </svg>
-              </div>
-              <div
-                class="absolute inset-0 rounded-full bg-blue-400 blur-md opacity-50"
-              ></div>
-            </div>
-            <div>
-              <h1
-                class="text-2xl bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-400 bg-clip-text text-transparent font-semibold"
-              >
-                JARVIS
-              </h1>
-              <p class="text-xs text-cyan-400/70">
-                Just a teaser of Iron Man's Jarvis!
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-            <span class="text-xs text-green-400">Online</span>
-          </div>
+  <body class="m-0 overflow-hidden select-none bg-ironman-screen h-screen w-screen text-white font-jarvis-ui">
+    <div class="relative h-full w-full flex flex-col justify-between overflow-hidden">
+      
+      <!-- Top Header Bar -->
+      <header class="relative z-30 flex items-center justify-between px-8 pt-6">
+        <h1 class="text-3xl text-[#dfad30] font-jarvis-logo tracking-wider drop-shadow-sm uppercase">
+          JARVIS
+        </h1>
+        <div class="flex items-center gap-3">
+          <span class="w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_10px_#ffffff]"></span>
+          <span class="text-2xl tracking-wider text-[#dfad30] font-avengero uppercase">
+            ONLINE
+          </span>
         </div>
       </header>
 
-      <!-- Chat Container -->
-      <main
-        id="chat"
-        class="relative z-10 max-w-4xl mx-auto px-4 py-6 overflow-y-auto"
-        style="height: calc(100vh - 180px)"
-      >
-        <div id="messages" class="space-y-4">
-          <!-- Welcome screen -->
-          <div
-            id="welcomeScreen"
-            class="flex flex-col items-center justify-center h-full text-center space-y-4"
-            style="margin-top: 100px"
-          >
-            <div class="relative">
-              <div
-                class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center"
-              >
-                <svg
-                  class="w-12 h-12 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  ></path>
-                </svg>
-              </div>
-              <div
-                class="absolute inset-0 rounded-full bg-blue-400 blur-2xl opacity-50 animate-pulse"
-              ></div>
-            </div>
-            <h2
-              class="text-3xl bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent"
-            >
-              Hello, I'm JARVIS
-            </h2>
-            <p class="text-cyan-400/70 max-w-md">
-              Jarvis is here to help. Ask me anything or give me a task to
-              complete.
-            </p>
-          </div>
-        </div>
-      </main>
-
-      <!-- Input Box -->
+      <!-- Central Arc Reactor Stage (Slides way up when message is sent) -->
       <div
-        class="fixed bottom-0 left-0 right-0 z-20 backdrop-blur-md bg-black/30 border-t border-blue-500/30"
+        id="heroStage"
+        class="absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-700 ease-in-out pointer-events-none"
       >
-        <div class="max-w-4xl mx-auto px-4 py-4">
-          <div class="flex gap-2 items-center">
-            <div class="flex-1 relative">
-              <input
-                id="input"
-                type="text"
-                placeholder="Message Jarvis..."
-                class="w-full px-4 py-3 rounded-xl bg-slate-800/80 border border-cyan-500/30 text-cyan-100 placeholder-cyan-400/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-transparent transition-all"
-              />
-            </div>
-            <button
-              id="sendBtn"
-              onclick="send()"
-              class="px-4 py-3 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-600 text-white hover:from-blue-500 hover:to-cyan-500 transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                ></path>
-              </svg>
-            </button>
-            <button
-              onclick="stopResponse()"
-              class="px-4 py-3 rounded-xl bg-red-600 text-white hover:bg-red-500"
-            >
-              ⛔
-            </button>
-            <button
-              id="voiceBtn"
-              onclick="startVoice()"
-              class="px-4 py-3 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-600 text-white hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"
-                ></path>
-              </svg>
-            </button>
-          </div>
+        <div id="arcReactor" class="relative transition-transform duration-700 arc-glow">
+          <img
+            src="../assets/arcreactor.png"
+            alt="Arc Reactor"
+            class="arc-reactor-image w-48 h-48 sm:w-56 sm:h-56 object-contain"
+          />
+        </div>
+
+        <div id="heroText" class="mt-6 text-center transition-opacity duration-500">
+          <p class="text-[#dfad30] text-2xl font-bold tracking-wider leading-none">
+            HELLO, I AM JARVIS
+          </p>
+          <p class="text-[#dfad30] text-2xl font-bold tracking-wider leading-tight mt-1">
+            WHAT CAN I DO FOR YOU TODAY?
+          </p>
         </div>
       </div>
+
+      <!-- Chat Bubble Container -->
+      <main
+        id="chat"
+        class="relative z-20 flex-1 overflow-y-auto px-4 sm:px-12 pt-28 pb-32 space-y-4 max-w-6xl mx-auto w-full"
+      >
+        <div id="messages" class="space-y-4"></div>
+      </main>
+
+      <!-- Input Bar Section -->
+      <footer class="relative z-30 w-full max-w-6xl mx-auto px-3 sm:px-4 pb-7">
+        <div class="flex items-center gap-3">
+          <!-- Text Input Field -->
+          <div class="flex-1 relative min-h-16 rounded-xl bg-input-gradient p-[2px] shadow-lg shadow-black/40">
+            <input
+              id="input"
+              type="text"
+              placeholder="TYPE A MESSAGE"
+              autocomplete="off"
+              class="w-full bg-transparent px-5 py-4 text-xl font-jarvis-ui tracking-wider text-black placeholder-black focus:outline-none uppercase"
+            />
+          </div>
+
+          <!-- Send Action Button (send.png) -->
+          <button
+            id="sendBtn"
+            onclick="send()"
+            title="Send Message"
+            class="h-14 w-16 rounded-xl bg-[#dfad30] hover:bg-[#ebd55c] transition-all flex items-center justify-center shadow-lg active:scale-95"
+          >
+            <img
+              src="../assets/send.png"
+              alt="Send"
+              class="w-6 h-6 object-contain"
+            />
+          </button>
+
+          <!-- Stop / Cancel Action Button (stop.png) -->
+          <button
+            id="stopBtn"
+            onclick="stopResponse()"
+            title="Stop Response"
+            class="h-14 w-16 rounded-xl bg-[#e63946] hover:bg-[#d62839] transition-all flex items-center justify-center shadow-lg active:scale-95"
+          >
+            <img
+              src="../assets/stop.png"
+              alt="Stop"
+              class="w-6 h-6 object-contain"
+            />
+          </button>
+        </div>
+      </footer>
     </div>
 
     <script>
       let controller = null;
-      let isListening = false;
+      let hasStarted = false;
 
-      // Hide welcome screen when first message is sent
-      function hideWelcome() {
-        const welcomeScreen = document.getElementById("welcomeScreen");
-        if (welcomeScreen) {
-          welcomeScreen.style.display = "none";
-        }
+      // Moves reactor upward and fades hero title
+      function activateChatMode() {
+        if (hasStarted) return;
+        hasStarted = true;
+
+        const stage = document.getElementById("heroStage");
+        const arc = document.getElementById("arcReactor");
+        const text = document.getElementById("heroText");
+
+        text.style.opacity = "0";
+        stage.classList.remove("justify-center");
+        stage.classList.add("justify-start", "pt-3");
+        arc.classList.add("scale-[0.42]", "-translate-y-8", "opacity-90");
       }
 
       function stopResponse() {
@@ -290,79 +337,63 @@
         }
       }
 
-      // Send message
       async function send(text = null) {
         const input = document.getElementById("input");
         const messages = document.getElementById("messages");
-
-        const msg = text || input.value.trim();
+        const msg = (text || input.value).trim();
         if (!msg) return;
 
-        hideWelcome();
+        activateChatMode();
 
-        // Add user message
+        // User Chat Bubble
         const userDiv = document.createElement("div");
-        userDiv.className = "flex justify-end animate-fade-in";
+        userDiv.className = "message-row user animate-message";
         userDiv.innerHTML = `
-                <div class="max-w-[70%] px-4 py-3 rounded-2xl backdrop-blur-md bg-gradient-to-br from-blue-600/80 to-cyan-600/80 text-white border border-blue-400/30 shadow-lg shadow-blue-500/20">
-                    <p class="text-sm leading-relaxed">${msg}</p>
-                    <span class="text-xs opacity-50 mt-1 block">${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-                </div>
-            `;
+          <div class="chat-bubble user-bubble">
+            <p class="chat-text">${escapeHtml(msg)}</p>
+            <span class="chat-time">${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+          </div>
+        `;
         messages.appendChild(userDiv);
         input.value = "";
+        scrollToBottom();
 
-        // Add typing indicator
+        // Typing Indicator Bubble
         const typingDiv = document.createElement("div");
-        typingDiv.className = "flex justify-start animate-fade-in";
+        typingDiv.className = "message-row jarvis animate-message";
         typingDiv.id = "typing";
         typingDiv.innerHTML = `
-                <div class="max-w-[70%] px-4 py-3 rounded-2xl backdrop-blur-md bg-slate-800/80 border border-cyan-500/30">
-                    <div class="flex gap-1">
-                        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-bounce"></div>
-                        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style="animation-delay: 150ms;"></div>
-                        <div class="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style="animation-delay: 300ms;"></div>
-                    </div>
-                </div>
-            `;
+          <div class="chat-bubble jarvis-bubble typing-bubble">
+            <span></span><span></span><span></span>
+          </div>
+        `;
         messages.appendChild(typingDiv);
         scrollToBottom();
 
-        // Simulate API call
         try {
           controller = new AbortController();
-          
-         //const res = await fetch("chat", {
           const res = await fetch("http://127.0.0.1:8000/chat", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: msg }),
             signal: controller.signal,
           });
 
-          if (!res.ok) {
-            throw new Error(await res.text());
-          }
+          if (!res.ok) throw new Error(await res.text());
 
-          console.log(res.status);
-          console.log(res.body);
-
-          // Remove typing indicator
           typingDiv.remove();
 
-          // Add bot message
+          // Bot Chat Bubble
           const botDiv = document.createElement("div");
-          botDiv.className = "flex justify-start animate-fade-in";
+          botDiv.className = "message-row jarvis animate-message";
           botDiv.innerHTML = `
-                    <div class="max-w-[70%] px-4 py-3 rounded-2xl backdrop-blur-md bg-slate-800/80 text-cyan-100 border border-cyan-500/30 shadow-lg shadow-cyan-500/10">
-                        <p class="text-sm leading-relaxed"></p>
-                        <span class="text-xs opacity-50 mt-1 block">${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-                    </div>
-                `;
+            <div class="chat-bubble jarvis-bubble">
+              <p class="chat-text response-text"></p>
+              <span class="chat-time">${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+            </div>
+          `;
           messages.appendChild(botDiv);
-          const botText = botDiv.querySelector("p");
+          const botText = botDiv.querySelector(".response-text");
 
           const reader = res.body.getReader();
           const decoder = new TextDecoder();
@@ -374,94 +405,43 @@
             scrollToBottom();
           }
         } catch (error) {
-          // Remove typing indicator if exists
           const typing = document.getElementById("typing");
           if (typing) typing.remove();
 
-          //  If user stops the response
           if (error.name === "AbortError") {
-            const messages = document.getElementById("messages");
-
             const stopDiv = document.createElement("div");
-            stopDiv.className = "flex justify-start animate-fade-in";
+            stopDiv.className = "message-row jarvis animate-message";
             stopDiv.innerHTML = `
-            <div class="max-w-[70%] px-4 py-3 rounded-2xl backdrop-blur-md bg-slate-800/80 text-red-300 border border-red-500/30 shadow-lg shadow-red-500/10">
-                <p class="text-sm leading-relaxed">You stopped the response</p>
-                <span class="text-xs opacity-50 mt-1 block">${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-            </div>
-        `;
+              <div class="chat-bubble jarvis-bubble">
+                <p class="chat-text">Operation Aborted</p>
+              </div>
+            `;
             messages.appendChild(stopDiv);
-
-            scrollToBottom();
-            return;
           }
-
-          // fallback error (existing behavior)
         }
-
         scrollToBottom();
       }
 
-      // Voice input
-      function startVoice() {
-        if (isListening) return;
-
-        if (
-          "webkitSpeechRecognition" in window ||
-          "SpeechRecognition" in window
-        ) {
-          const SpeechRecognition =
-            window.SpeechRecognition || window.webkitSpeechRecognition;
-          const recognition = new SpeechRecognition();
-
-          recognition.start();
-          isListening = true;
-
-          const voiceBtn = document.getElementById("voiceBtn");
-          voiceBtn.className =
-            "px-4 py-3 rounded-xl bg-gradient-to-br from-red-600 to-red-500 text-white animate-pulse transition-all shadow-lg shadow-red-500/40";
-
-          recognition.onresult = function (event) {
-            const text = event.results[0][0].transcript;
-            send(text);
-            isListening = false;
-            voiceBtn.className =
-              "px-4 py-3 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-600 text-white hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40";
-          };
-
-          recognition.onerror = function () {
-            isListening = false;
-            voiceBtn.className =
-              "px-4 py-3 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-600 text-white hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40";
-          };
-
-          recognition.onend = function () {
-            isListening = false;
-            voiceBtn.className =
-              "px-4 py-3 rounded-xl bg-gradient-to-br from-cyan-600 to-blue-600 text-white hover:from-cyan-500 hover:to-blue-500 transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40";
-          };
-        } else {
-          alert("Speech recognition is not supported in this browser.");
-        }
-      }
-
-      // Scroll to bottom
       function scrollToBottom() {
         const chat = document.getElementById("chat");
         chat.scrollTop = chat.scrollHeight;
       }
 
-      // Enter key support
+      function escapeHtml(value) {
+        const container = document.createElement("div");
+        container.textContent = value;
+        return container.innerHTML;
+      }
+
       document.getElementById("input").addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault();
           send();
         }
       });
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") {
-          stopResponse();
-        }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") stopResponse();
       });
     </script>
   </body>
