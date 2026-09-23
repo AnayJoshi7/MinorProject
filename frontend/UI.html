@@ -24,8 +24,9 @@
       }
 
       .font-jarvis-logo {
-        font-family: "Avengero", sans-serif;
+        font-family: "AmericanCaptain", sans-serif;
         letter-spacing: 0.05em;
+        color: #dbeaff;
       }
 
       .font-jarvis-ui {
@@ -34,54 +35,55 @@
       }
 
       .font-avengero {
-        font-family: "Avengero", sans-serif;
+        font-family: "AmericanCaptain", sans-serif;
+        color: #dbeaff;
       }
 
-      /* Exact Background Gradient from design specs */
+      /* Background Gradient */
       .bg-ironman-screen {
-        background: linear-gradient(
-          125deg,
-          #53141e 27%,
-          #ab0a0a 59%,
-          #801417 79%,
-          #d39819 90%,
-          #c0a345 100%
-        );
+        position: relative;
+        background-image:
+          linear-gradient(180deg, rgba(0, 4, 12, 0.34) 0%, rgba(0, 5, 15, 0.08) 46%, rgba(0, 4, 11, 0.58) 100%),
+          linear-gradient(90deg, rgba(0, 4, 12, 0.32) 0%, rgba(0, 8, 19, 0.02) 50%, rgba(0, 4, 12, 0.3) 100%),
+          url("../assets/arc.jpg");
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        animation: hud-breathe 7s ease-in-out infinite;
+        transform-origin: center;
       }
 
-      /* Exact Input Bar Gradient from design specs */
+      .bg-ironman-screen::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(4, 25, 49, 0.74) 0%, transparent 18%, transparent 82%, rgba(3, 16, 34, 0.62) 100%),
+          linear-gradient(180deg, rgba(2, 7, 18, 0.42) 0%, transparent 18%, transparent 76%, rgba(1, 6, 16, 0.72) 100%);
+        mix-blend-mode: multiply;
+        opacity: 0.72;
+      }
+
+      .bg-ironman-screen::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(ellipse at center, transparent 42%, rgba(0, 2, 8, 0.54) 100%);
+      }
+
+      /* Exact Figma Design Linear Gradient */
       .bg-input-gradient {
-        background: linear-gradient(
-          to right,
-          #712828 0%,
-          #dfad30 19%,
-          #f4c632 100%
-        );
+        background: linear-gradient(90deg, #B6D7FF 0%, #18448F 100%);
       }
 
-      /* Arc Reactor Core Glow */
-      .arc-glow {
-        filter: drop-shadow(0 0 20px rgba(0, 180, 255, 0.45));
-        animation: arc-reactor-float 4s ease-in-out infinite,
-                   arc-reactor-glow 2.2s ease-in-out infinite;
-        will-change: transform, filter;
-      }
-
-      @keyframes arc-reactor-float {
+      @keyframes hud-breathe {
         0%, 100% {
-          transform: translateY(0);
+          background-position: center center;
         }
         50% {
-          transform: translateY(-8px);
-        }
-      }
-
-      @keyframes arc-reactor-glow {
-        0%, 100% {
-          filter: drop-shadow(0 0 16px rgba(0, 180, 255, 0.35));
-        }
-        50% {
-          filter: drop-shadow(0 0 29px rgba(0, 190, 255, 0.72));
+          background-position: center 1.2%;
         }
       }
 
@@ -93,11 +95,11 @@
         background: transparent;
       }
       #chat::-webkit-scrollbar-thumb {
-        background: rgba(223, 173, 48, 0.4);
+        background: rgba(182, 215, 255, 0.35);
         border-radius: 9999px;
       }
       #chat::-webkit-scrollbar-thumb:hover {
-        background: rgba(223, 173, 48, 0.7);
+        background: rgba(182, 215, 255, 0.6);
       }
 
       @keyframes message-pop {
@@ -137,8 +139,8 @@
       }
 
       .chat-bubble {
-        border-radius: 16px;
-        box-shadow: 0 7px 14px rgba(31, 4, 7, 0.25);
+        border-radius: 14px;
+        box-shadow: 0 7px 18px rgba(0, 0, 0, 0.35);
         font-family: "AmericanCaptain", sans-serif;
         line-height: 1.05;
       }
@@ -146,23 +148,24 @@
       .user-bubble {
         width: fit-content;
         max-width: min(34vw, 390px);
-        padding: 14px 18px 11px;
-        background: #e7b530;
-        color: #351010;
+        padding: 14px 20px 11px;
+        border-radius: 14px 4px 14px 14px;
+        background: linear-gradient(90deg, #B6D7FF 0%, #18448F 100%);
+        color: #0b1a2d;
       }
 
       .jarvis-bubble {
         width: fit-content;
         max-width: min(52vw, 610px);
-        padding: 15px 22px 12px;
-        background: rgba(39, 8, 13, 0.88);
-        border: 1px solid rgba(223, 173, 48, 0.52);
-        color: #fff8e1;
+        padding: 14px 22px 11px;
+        border-radius: 4px 14px 14px 14px;
+        background: linear-gradient(90deg, #B6D7FF 0%, #18448F 100%);
+        color: #0b1a2d;
       }
 
       .chat-text {
         margin: 0;
-        font-size: clamp(16px, 1.45vw, 23px);
+        font-size: clamp(17px, 1.45vw, 23px);
         letter-spacing: 0.055em;
         text-transform: uppercase;
       }
@@ -170,32 +173,24 @@
       .chat-time {
         display: block;
         margin-top: 7px;
-        color: #6f4718;
+        color: rgba(11, 26, 45, 0.65);
         font-family: "AmericanCaptain", sans-serif;
         font-size: 12px;
         letter-spacing: 0.06em;
-      }
-
-      .jarvis-bubble .chat-time {
-        color: #c18c27;
-      }
-
-      .arc-reactor-image {
-        transform: translateY(-18px);
       }
 
       .typing-bubble {
         display: flex;
         align-items: center;
         gap: 5px;
-        min-height: 48px;
+        min-height: 44px;
       }
 
       .typing-bubble span {
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: #dfad30;
+        background: #0b1a2d;
         animation: typing 1s infinite ease-in-out;
       }
 
@@ -203,7 +198,7 @@
       .typing-bubble span:nth-child(3) { animation-delay: 0.3s; }
 
       @keyframes typing {
-        0%, 70%, 100% { transform: translateY(0); opacity: 0.45; }
+        0%, 70%, 100% { transform: translateY(0); opacity: 0.35; }
         35% { transform: translateY(-5px); opacity: 1; }
       }
 
@@ -217,6 +212,48 @@
           font-size: 16px;
         }
       }
+
+      #heroText {
+        margin-top: 360px;
+        position: relative;
+        z-index: 12;
+      }
+
+      #heroText p {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.1;
+        letter-spacing: 0.04em;
+      }
+
+      .composer-footer {
+        width: min(78.5vw, 1315px);
+        max-width: 1315px;
+      }
+
+      .send-btn {
+        width: 60px;
+        height: 60px;
+        flex-basis: 60px;
+        border-radius: 12px;
+        background: #027da8;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+
+      .stop-btn {
+        width: 60px;
+        height: 60px;
+        flex-basis: 60px;
+        border-radius: 12px;
+        background: #681b22;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      }
+
+      @media (max-width: 700px) {
+        .composer-footer { width: calc(100% - 24px); }
+        .send-btn,
+        .stop-btn { width: 50px; height: 50px; flex-basis: 50px; }
+      }
     </style>
   </head>
   <body class="m-0 overflow-hidden select-none bg-ironman-screen h-screen w-screen text-white font-jarvis-ui">
@@ -224,35 +261,27 @@
       
       <!-- Top Header Bar -->
       <header class="relative z-30 flex items-center justify-between px-8 pt-6">
-        <h1 class="text-3xl text-[#dfad30] font-jarvis-logo tracking-wider drop-shadow-sm uppercase">
+        <h1 class="text-4xl text-[#c7dcf7] font-jarvis-logo tracking-wider uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)]">
           JARVIS
         </h1>
         <div class="flex items-center gap-3">
-          <span class="w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_10px_#ffffff]"></span>
-          <span class="text-2xl tracking-wider text-[#dfad30] font-avengero uppercase">
+          <span class="w-3 h-3 rounded-full bg-[#c7dcf7] shadow-[0_0_8px_#c7dcf7]"></span>
+          <span class="text-2xl tracking-wider text-[#c7dcf7] font-avengero uppercase">
             ONLINE
           </span>
         </div>
       </header>
 
-      <!-- Central Arc Reactor Stage (Slides way up when message is sent) -->
+      <!-- Central Arc Reactor Stage -->
       <div
         id="heroStage"
         class="absolute inset-0 z-10 flex flex-col items-center justify-center transition-all duration-700 ease-in-out pointer-events-none"
       >
-        <div id="arcReactor" class="relative transition-transform duration-700 arc-glow">
-          <img
-            src="../assets/arcreactor.png"
-            alt="Arc Reactor"
-            class="arc-reactor-image w-48 h-48 sm:w-56 sm:h-56 object-contain"
-          />
-        </div>
-
-        <div id="heroText" class="mt-6 text-center transition-opacity duration-500">
-          <p class="text-[#dfad30] text-2xl font-bold tracking-wider leading-none">
+        <div id="heroText" class="text-center transition-opacity duration-500 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+          <p class="text-[#e2efff] text-3xl font-bold tracking-wider leading-none">
             HELLO, I AM JARVIS
           </p>
-          <p class="text-[#dfad30] text-2xl font-bold tracking-wider leading-tight mt-1">
+          <p class="text-[#e2efff] text-3xl font-bold tracking-wider leading-tight mt-1">
             WHAT CAN I DO FOR YOU TODAY?
           </p>
         </div>
@@ -267,44 +296,44 @@
       </main>
 
       <!-- Input Bar Section -->
-      <footer class="relative z-30 w-full max-w-6xl mx-auto px-3 sm:px-4 pb-7">
+      <footer class="composer-footer relative z-30 w-full max-w-6xl mx-auto px-3 sm:px-4 pb-7">
         <div class="flex items-center gap-3">
-          <!-- Text Input Field -->
-          <div class="flex-1 relative min-h-16 rounded-xl bg-input-gradient p-[2px] shadow-lg shadow-black/40">
+          <!-- Text Input Field using Figma Gradient -->
+          <div class="flex-1 relative h-[60px] rounded-xl bg-input-gradient shadow-lg shadow-black/40 flex items-center">
             <input
               id="input"
               type="text"
               placeholder="TYPE A MESSAGE"
               autocomplete="off"
-              class="w-full bg-transparent px-5 py-4 text-xl font-jarvis-ui tracking-wider text-black placeholder-black focus:outline-none uppercase"
+              class="w-full bg-transparent px-6 text-xl font-jarvis-ui tracking-wider text-[#0b1a2d] placeholder-[#0b1a2d]/70 focus:outline-none uppercase"
             />
           </div>
 
-          <!-- Send Action Button (send.png) -->
+          <!-- Send Action Button -->
           <button
             id="sendBtn"
             onclick="send()"
             title="Send Message"
-            class="h-14 w-16 rounded-xl bg-[#dfad30] hover:bg-[#ebd55c] transition-all flex items-center justify-center shadow-lg active:scale-95"
+            class="send-btn transition-all flex items-center justify-center active:scale-95 hover:brightness-110"
           >
             <img
               src="../assets/send.png"
               alt="Send"
-              class="w-6 h-6 object-contain"
+              class="w-6 h-6 object-contain filter invert drop-shadow"
             />
           </button>
 
-          <!-- Stop / Cancel Action Button (stop.png) -->
+          <!-- Stop / Cancel Action Button -->
           <button
             id="stopBtn"
             onclick="stopResponse()"
             title="Stop Response"
-            class="h-14 w-16 rounded-xl bg-[#e63946] hover:bg-[#d62839] transition-all flex items-center justify-center shadow-lg active:scale-95"
+            class="stop-btn transition-all flex items-center justify-center active:scale-95 hover:brightness-110"
           >
             <img
               src="../assets/stop.png"
               alt="Stop"
-              class="w-6 h-6 object-contain"
+              class="w-6 h-6 object-contain filter invert drop-shadow"
             />
           </button>
         </div>
@@ -315,19 +344,16 @@
       let controller = null;
       let hasStarted = false;
 
-      // Moves reactor upward and fades hero title
       function activateChatMode() {
         if (hasStarted) return;
         hasStarted = true;
 
         const stage = document.getElementById("heroStage");
-        const arc = document.getElementById("arcReactor");
         const text = document.getElementById("heroText");
 
         text.style.opacity = "0";
         stage.classList.remove("justify-center");
         stage.classList.add("justify-start", "pt-3");
-        arc.classList.add("scale-[0.42]", "-translate-y-8", "opacity-90");
       }
 
       function stopResponse() {
@@ -345,7 +371,6 @@
 
         activateChatMode();
 
-        // User Chat Bubble
         const userDiv = document.createElement("div");
         userDiv.className = "message-row user animate-message";
         userDiv.innerHTML = `
@@ -358,7 +383,6 @@
         input.value = "";
         scrollToBottom();
 
-        // Typing Indicator Bubble
         const typingDiv = document.createElement("div");
         typingDiv.className = "message-row jarvis animate-message";
         typingDiv.id = "typing";
@@ -383,7 +407,6 @@
 
           typingDiv.remove();
 
-          // Bot Chat Bubble
           const botDiv = document.createElement("div");
           botDiv.className = "message-row jarvis animate-message";
           botDiv.innerHTML = `
