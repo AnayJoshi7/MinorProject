@@ -72,11 +72,10 @@ Make sure you have installed:
 1.Python 3.10+
 2.Ollama
 Installation:
-1️⃣ Clone Repository
+1. Clone Repository
 git clone https://github.com/AnayJoshi7/MinorProject
-
 cd MinorProject
-Install Backend Dependencies
+2. Install Backend Dependencies
 pip install -r requirements.txt
 Install Ollama
 Pull AI Model
@@ -84,7 +83,7 @@ ollama pull qwen2.5:3b
 Optional:
 ollama pull gemma4:e2b
 
-Running Jarvis:
+3. Running Jarvis:
 Start Backend-
 python -m uvicorn backend.main:app --reload 
 
