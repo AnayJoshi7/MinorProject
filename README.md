@@ -96,28 +96,6 @@ http://127.0.0.1:5500/frontend/index.html
 Phone (same WiFi):
 http://YOUR_LOCAL_IP:5500/frontend/index.html
 
-Current Capabilities
-
-Local AI Assistant
-Streaming Responses
-Voice Interaction
-Desktop Automation
-Website Launcher
-Mobile Access
-Stop Generation
-Memory Support
-Modern UI
-Deploy projects
-Manage docker compose
-Enable workflows
-
-Future Improvements
-Internet-enabled AI tools
-Smarter natural language command execution
-Android app version
-AI vision support
-Multi-chat history
-Workflow automation
 
 Disclaimer
 This is a Minor Project developed for assessment purposes in college exams.
